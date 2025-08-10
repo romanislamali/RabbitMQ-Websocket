@@ -1,0 +1,22 @@
+
+server:
+  port: 8090
+
+spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/greenlc
+    username: greenlc
+    password: ENC(r/qXI573FPSBI0jyRj//mA==)
+
+  jpa:
+    hibernate:
+      ddl-auto: update # Use update for development, none for production
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
