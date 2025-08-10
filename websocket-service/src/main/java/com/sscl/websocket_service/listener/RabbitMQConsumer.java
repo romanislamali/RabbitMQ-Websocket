@@ -13,7 +13,6 @@ public class RabbitMQConsumer {
 
     @RabbitListener(queues = "notification.queue")
     public void consume(NotificationDto dto) {
-        System.out.println("✅ Received notification from RabbitMQ: " + dto);
         notificationService.createAndSendNotification(dto);
     }
 }

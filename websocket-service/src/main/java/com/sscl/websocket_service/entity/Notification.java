@@ -38,11 +38,19 @@ public class Notification {
     @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted = false;
 
-    private Long lcId;
+    @Column(name = "lc_id", nullable = false)
+    private UUID lcId;
+
+    @Column(name = "lc_status")
     private String lcStatus;
-    private String role;
+
+    @Column(name = "viewer_role")
+    private String viewerRole;
+
+    @Column(name = "message")
     private String message;
 
+    @Column(name = "is_read")
     private Boolean isRead = false;
 
 }
