@@ -1,5 +1,6 @@
 package com.sscl.websocket_service.listener;
 
+import com.sscl.websocket_service.config.Paths;
 import com.sscl.websocket_service.dto.NotificationDto;
 import com.sscl.websocket_service.service.NotificationService;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -11,7 +12,7 @@ public class RabbitMQConsumer {
     @Autowired
     private NotificationService notificationService;
 
-    @RabbitListener(queues = "notification.queue")
+    @RabbitListener(queues = Paths.NOTIFICATION_QUEUE)
     public void consume(NotificationDto dto) {
         notificationService.createAndSendNotification(dto);
     }

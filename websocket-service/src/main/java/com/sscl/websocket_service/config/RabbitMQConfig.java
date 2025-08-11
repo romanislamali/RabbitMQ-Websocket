@@ -12,22 +12,19 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
-    public static final String QUEUE = "notification.queue";
-    public static final String EXCHANGE = "notification.exchange";
-
     @Bean
     Queue queue() {
-        return new Queue(QUEUE, false);
+        return new Queue(Paths.NOTIFICATION_QUEUE, false);
     }
 
     @Bean
     TopicExchange exchange() {
-        return new TopicExchange(EXCHANGE);
+        return new TopicExchange(Paths.NOTIFICATION_EXCHANGE);
     }
 
     @Bean
     Binding binding(Queue queue, TopicExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with("notify.#");
+        return BindingBuilder.bind(queue).to(exchange).with(Paths.ROUTING_KEY);
     }
 
     @Bean

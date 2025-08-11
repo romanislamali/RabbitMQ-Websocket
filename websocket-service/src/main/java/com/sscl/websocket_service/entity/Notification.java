@@ -1,6 +1,7 @@
 package com.sscl.websocket_service.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.sscl.websocket_service.config.Paths;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,7 +14,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "notification")
+@Table(name = Paths.NOTIFICATION)
 @Entity
 public class Notification {
     @Id

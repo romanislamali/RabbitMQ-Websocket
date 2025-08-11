@@ -1,12 +1,17 @@
 package com.sscl.websocket_service.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sscl.websocket_service.config.Paths;
 import com.sscl.websocket_service.dto.NotificationDto;
 import com.sscl.websocket_service.entity.Notification;
 import com.sscl.websocket_service.repository.NotificationRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.List;
 
 @Service
 public class NotificationServiceImpl implements NotificationService{
@@ -33,7 +38,21 @@ public class NotificationServiceImpl implements NotificationService{
 
         Notification savedNotification = notificationRepository.save(notification);
 
-        // Send to frontend WebSocket
-        messagingTemplate.convertAndSend("/topic/role/" + dto.getViewerRole(), dto);
+        try {
+            String jsonMessage = new ObjectMapper().writeValueAsString(dto);
+            messagingTemplate.convertAndSend(Paths.TOPIC_ROLE + dto.getViewerRole(), jsonMessage);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public List<Notification> getAllRoleBasedNotifications(String viewerRole) {
+        return notificationRepository.findAllByViewerRole(viewerRole);
+    }
+
+    @Override
+    public List<Notification> getAllNotifications() {
+        return notificationRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
     }
 }
