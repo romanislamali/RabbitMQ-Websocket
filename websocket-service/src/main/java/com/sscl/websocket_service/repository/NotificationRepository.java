@@ -7,6 +7,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface NotificationRepository extends JpaRepository<Notification, UUID> {
-    List<Notification> findAllByViewerRole(String viewerRole);
+    List<Notification> findAllByViewerRoleAndGroupId(String viewerRole, UUID groupId);
     List<Notification> findByViewerRoleAndIsReadFalse(String role);
 }

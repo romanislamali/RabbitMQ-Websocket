@@ -42,6 +42,9 @@ public class Notification {
     @Column(name = "lc_id", nullable = false)
     private UUID lcId;
 
+    @Column(name = "group_id")
+    private UUID groupId;
+
     @Column(name = "lc_status")
     private String lcStatus;
 

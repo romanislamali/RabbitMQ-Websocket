@@ -12,6 +12,7 @@ public class Paths {
     public static final String APP = "/app";
     public static final String TOPIC_ROLE = "/topic/role/";
     public static final String VIEWER_ROLE = "/{viewerRole}";
+    public static final String GROUP_ID = "/{groupId}";
     public static final String CUSTOMER_CLINT_PORT = "http://localhost:4200";
     public static final String BANK_CLINT_PORT = "http://localhost:4201";
     public static final String SEND_NOTIFICATION = "/send-notification";

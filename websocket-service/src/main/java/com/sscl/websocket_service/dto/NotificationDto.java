@@ -14,6 +14,7 @@ public class NotificationDto implements Serializable {
     private String message;
     private String viewerRole;
     private UUID lcId;
+    private UUID groupId;
     private String lcStatus;
     private String createdBy;
 }

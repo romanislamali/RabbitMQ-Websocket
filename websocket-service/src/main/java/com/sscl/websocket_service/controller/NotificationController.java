@@ -9,6 +9,7 @@ import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
 
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 public class NotificationController {
@@ -19,9 +20,9 @@ public class NotificationController {
         this.notificationService = notificationService;
     }
 
-    @MessageMapping(Paths.FETCH_ALL_NOTIFICATIONS + Paths.VIEWER_ROLE)
+    @MessageMapping(Paths.FETCH_ALL_NOTIFICATIONS + Paths.VIEWER_ROLE + Paths.GROUP_ID)
     @SendToUser(Paths.QUEUE_ALL_NOTIFICATIONS)
-    public List<Notification> fetchAllNotifications(@DestinationVariable String viewerRole) {
-        return notificationService.getAllRoleBasedNotifications(viewerRole);
+    public List<Notification> fetchAllNotifications(@DestinationVariable String viewerRole, @DestinationVariable UUID groupId) {
+        return notificationService.getAllRoleAndGroupBasedNotifications(viewerRole, groupId);
     }
 }

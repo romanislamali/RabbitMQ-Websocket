@@ -6,49 +6,62 @@ import com.sscl.websocket_service.config.Paths;
 import com.sscl.websocket_service.dto.NotificationDto;
 import com.sscl.websocket_service.entity.Notification;
 import com.sscl.websocket_service.repository.NotificationRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 
+@Slf4j
 @Service
 public class NotificationServiceImpl implements NotificationService{
 
     private final NotificationRepository notificationRepository;
     private final SimpMessagingTemplate messagingTemplate;
+    private final ObjectMapper objectMapper;
 
-    public NotificationServiceImpl(NotificationRepository notificationRepository, SimpMessagingTemplate messagingTemplate) {
+    public NotificationServiceImpl(NotificationRepository notificationRepository, SimpMessagingTemplate messagingTemplate, ObjectMapper objectMapper) {
         this.notificationRepository = notificationRepository;
         this.messagingTemplate = messagingTemplate;
+        this.objectMapper = objectMapper;
     }
 
     @Override
     public void createAndSendNotification(NotificationDto dto) {
-        Notification notification = new Notification();
-        notification.setMessage(dto.getMessage());
-        notification.setViewerRole(dto.getViewerRole());
-        notification.setLcId(dto.getLcId());
-        notification.setLcStatus(dto.getLcStatus());
-        notification.setCreatedBy(dto.getCreatedBy());
-        notification.setIsRead(false);
-        notification.setCreatedAt(Instant.now());
-        notification.setUpdatedAt(Instant.now());
+        Notification notification = Notification.builder()
+                .message(dto.getMessage())
+                .viewerRole(dto.getViewerRole())
+                .lcId(dto.getLcId())
+                .groupId(dto.getGroupId())
+                .lcStatus(dto.getLcStatus())
+                .createdBy(dto.getCreatedBy())
+                .isRead(false)
+                .createdAt(Instant.now())
+                .updatedAt(Instant.now())
+                .build();
 
-        Notification savedNotification = notificationRepository.save(notification);
+        notificationRepository.save(notification);
 
+        sendNotificationToWebSocket(dto);
+    }
+
+    private void sendNotificationToWebSocket(NotificationDto dto) {
         try {
-            String jsonMessage = new ObjectMapper().writeValueAsString(dto);
-            messagingTemplate.convertAndSend(Paths.TOPIC_ROLE + dto.getViewerRole(), jsonMessage);
+            messagingTemplate.convertAndSend(
+                    Paths.TOPIC_ROLE + dto.getViewerRole(),
+                    objectMapper.writeValueAsString(dto)
+            );
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            log.error("Failed to send WebSocket notification for LC ID: {}", dto.getLcId(), e);
         }
     }
 
     @Override
-    public List<Notification> getAllRoleBasedNotifications(String viewerRole) {
-        return notificationRepository.findAllByViewerRole(viewerRole);
+    public List<Notification> getAllRoleAndGroupBasedNotifications(String viewerRole, UUID groupId) {
+        return notificationRepository.findAllByViewerRoleAndGroupId(viewerRole, groupId);
     }
 
     @Override
