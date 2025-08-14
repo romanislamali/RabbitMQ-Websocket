@@ -14,8 +14,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint(Paths.END_POINT)
-//                .setAllowedOrigins(Paths.CUSTOMER_CLINT_PORT, Paths.BANK_CLINT_PORT)
-                .setAllowedOriginPatterns("*")
+                .setAllowedOrigins(Paths.CUSTOMER_CLINT_PORT, Paths.BANK_CLINT_PORT)
                 .withSockJS();
     }
 
