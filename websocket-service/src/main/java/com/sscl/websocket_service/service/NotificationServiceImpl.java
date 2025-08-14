@@ -6,8 +6,8 @@ import com.sscl.websocket_service.config.Paths;
 import com.sscl.websocket_service.dto.NotificationDto;
 import com.sscl.websocket_service.entity.Notification;
 import com.sscl.websocket_service.repository.NotificationRepository;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Sort;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +30,7 @@ public class NotificationServiceImpl implements NotificationService{
     }
 
     @Override
+    @Transactional
     public void createAndSendNotification(NotificationDto dto) {
         Notification notification = Notification.builder()
                 .message(dto.getMessage())
@@ -60,12 +61,51 @@ public class NotificationServiceImpl implements NotificationService{
     }
 
     @Override
-    public List<Notification> getAllRoleAndGroupBasedNotifications(String viewerRole, UUID groupId) {
-        return notificationRepository.findAllByViewerRoleAndGroupId(viewerRole, groupId);
+    public List<Notification> getAllRoleAndGroupBasedNotificationsForCustomer(String viewerRole, UUID groupId) {
+        return notificationRepository.findAllByViewerRoleAndGroupIdAndIsDeletedFalseOrderByCreatedAtDesc(viewerRole, groupId);
     }
 
     @Override
-    public List<Notification> getAllNotifications() {
-        return notificationRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
+    public List<Notification> getAllRoleBasedNotificationsForBank(String viewerRole) {
+        return notificationRepository.findAllByViewerRoleAndIsDeletedFalseOrderByCreatedAtDesc(viewerRole);
+    }
+
+    @Override
+    @Transactional
+    public String deleteNotification(List<UUID> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return "No notifications to delete";
+        }
+
+        List<Notification> notificationList = notificationRepository.findAllById(ids);
+
+        if (notificationList.isEmpty()) {
+            return "No notifications found for the provided IDs";
+        }
+
+        notificationList.forEach(notification -> notification.setDeleted(true));
+        notificationRepository.saveAll(notificationList);
+
+        return "Soft deleted " + notificationList.size() + " notification(s) successfully";
+    }
+
+    @Override
+    @Transactional
+    public String markNotificationsAsRead(List<UUID> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return "No notifications to mark as read";
+        }
+
+        List<Notification> notifications = notificationRepository.findAllById(ids);
+
+        if (notifications.isEmpty()) {
+            return "No notifications found for the provided IDs";
+        }
+
+        notifications.forEach(n -> n.setIsRead(true));
+
+        notificationRepository.saveAll(notifications);
+
+        return "Marked " + notifications.size() + " notification(s) as read successfully";
     }
 }

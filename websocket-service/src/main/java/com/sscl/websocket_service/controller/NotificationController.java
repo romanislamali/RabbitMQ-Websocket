@@ -1,17 +1,15 @@
 package com.sscl.websocket_service.controller;
 
 import com.sscl.websocket_service.config.Paths;
-import com.sscl.websocket_service.entity.Notification;
 import com.sscl.websocket_service.service.NotificationService;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.simp.annotation.SendToUser;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
-@Controller
+@RestController
+@RequestMapping(Paths.NOTIFICATION)
 public class NotificationController {
 
     private final NotificationService notificationService;
@@ -20,9 +18,15 @@ public class NotificationController {
         this.notificationService = notificationService;
     }
 
-    @MessageMapping(Paths.FETCH_ALL_NOTIFICATIONS + Paths.VIEWER_ROLE + Paths.GROUP_ID)
-    @SendToUser(Paths.QUEUE_ALL_NOTIFICATIONS)
-    public List<Notification> fetchAllNotifications(@DestinationVariable String viewerRole, @DestinationVariable UUID groupId) {
-        return notificationService.getAllRoleAndGroupBasedNotifications(viewerRole, groupId);
+    @PatchMapping(Paths.DELETE)
+    public ResponseEntity<String> softDeleteNotifications(@RequestBody List<UUID> ids) {
+        String message = notificationService.deleteNotification(ids);
+        return ResponseEntity.ok(message);
+    }
+
+    @PatchMapping(Paths.MARK_AS_READ)
+    public ResponseEntity<String> markMultipleAsRead(@RequestBody List<UUID> ids) {
+        String message = notificationService.markNotificationsAsRead(ids);
+        return ResponseEntity.ok(message);
     }
 }

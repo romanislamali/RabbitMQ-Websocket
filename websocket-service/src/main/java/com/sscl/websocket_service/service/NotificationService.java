@@ -8,6 +8,8 @@ import java.util.UUID;
 
 public interface NotificationService {
     void createAndSendNotification(NotificationDto dto);
-    List<Notification> getAllRoleAndGroupBasedNotifications(String viewerRole, UUID groupId);
-    List<Notification> getAllNotifications();
+    List<Notification> getAllRoleAndGroupBasedNotificationsForCustomer(String viewerRole, UUID groupId);
+    List<Notification> getAllRoleBasedNotificationsForBank(String viewerRole);
+    String deleteNotification(List<UUID> ids);
+    String markNotificationsAsRead(List<UUID> ids);
 }
