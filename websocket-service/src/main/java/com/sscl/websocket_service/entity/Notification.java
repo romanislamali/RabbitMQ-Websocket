@@ -48,9 +48,6 @@ public class Notification {
     @Column(name = "lc_status")
     private String lcStatus;
 
-    @Column(name = "viewer_role")
-    private String viewerRole;
-
     @Column(name = "message")
     private String message;
 

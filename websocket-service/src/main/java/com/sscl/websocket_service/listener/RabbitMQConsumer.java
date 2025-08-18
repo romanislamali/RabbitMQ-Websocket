@@ -24,7 +24,7 @@ public class RabbitMQConsumer {
         log.info("Received Notification: {}", dto);
         try {
             notificationService.createAndSendNotification(dto);
-            log.info("Notification processed and sent via WebSocket for: {}", dto.getViewerRole());
+            log.info("Notification processed and sent via WebSocket for: {}", dto.getViewerRoles());
         } catch (Exception e) {
             log.error("Failed to process notification: {}", dto, e);
         }

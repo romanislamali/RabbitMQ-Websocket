@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -12,10 +13,13 @@ import java.util.UUID;
 @AllArgsConstructor
 public class NotificationDto implements Serializable {
     private String message;
-    private String viewerRole;
+    private List<String> viewerRoles;
     private UUID lcId;
     private UUID groupId;
     private String lcStatus;
     private String createdBy;
+    private String updatedAt;
+    private String isDeleted;
+    private Boolean isRead;
 }
 
