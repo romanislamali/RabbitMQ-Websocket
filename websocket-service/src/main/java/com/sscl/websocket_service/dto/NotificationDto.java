@@ -12,12 +12,14 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NotificationDto implements Serializable {
+    private UUID id;
     private String message;
     private List<String> viewerRoles;
     private UUID lcId;
     private UUID groupId;
     private String lcStatus;
     private String createdBy;
+    private String updatedBy;
     private String updatedAt;
     private String isDeleted;
     private Boolean isRead;

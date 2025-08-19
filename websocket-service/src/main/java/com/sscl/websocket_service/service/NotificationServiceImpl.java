@@ -49,12 +49,13 @@ public class NotificationServiceImpl implements NotificationService{
                 .updatedAt(Instant.now())
                 .build();
 
-        notificationRepository.save(notification);
+        Notification savedNotification = notificationRepository.save(notification);
+        dto.setId(savedNotification.getId());
 
         // Save NotificationRole for each viewerRole
         for (String roleType : dto.getViewerRoles()) {
             NotificationRole nr = new NotificationRole();
-            nr.setNotificationId(notification.getId());
+            nr.setNotificationId(savedNotification.getId());
             nr.setRoleType(roleType);
             notificationRoleRepository.save(nr);
         }
@@ -76,7 +77,6 @@ public class NotificationServiceImpl implements NotificationService{
         }
     }
 
-    @Override
     @Transactional
     public String deleteNotification(List<UUID> ids) {
         if (ids == null || ids.isEmpty()) {
