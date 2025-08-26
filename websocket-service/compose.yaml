@@ -1,0 +1,40 @@
+services:
+  websocket-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: websocket-service
+    container_name: websocket-service
+    restart: always
+    networks:
+      - greenlc-net
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres_greenlc:5432/greenlc
+      - SPRING_DATASOURCE_USERNAME=greenlc
+      - SPRING_DATASOURCE_PASSWORD=greenlc
+      - SERVER_PORT=8090
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=greenlc
+      - SPRING_RABBITMQ_PASSWORD=greenlc
+    ports:
+      - '8090:8090'
+
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=greenlc
+      - RABBITMQ_DEFAULT_PASS=greenlc
+    networks:
+      - greenlc-net
+
+volumes:
+  rabbitmq_data:
+
+networks:
+  greenlc-net:
+    external: true

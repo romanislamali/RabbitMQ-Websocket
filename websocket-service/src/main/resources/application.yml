@@ -4,16 +4,16 @@ server:
 
 spring:
   rabbitmq:
-    host: localhost
+    host: rabbitmq
     port: 5672
-    username: guest
-    password: guest
+    username: greenlc
+    password: greenlc
 
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/greenlc
     username: greenlc
-    password: ENC(r/qXI573FPSBI0jyRj//mA==)
+    password: greenlc
 
   jpa:
     hibernate:
