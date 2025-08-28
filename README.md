@@ -155,3 +155,62 @@ DTO deserialization errors → Ensure Jackson2JsonMessageConverter is configured
 
 License
 This project is for internal use and is not licensed for public distribution.
+
+
+
+
+# Websocket Service Deployment Guide
+1. Create the external network
+Since the docker-compose.yml expects an external network named greenlc-net, you need to create it manually (only once):
+bash
+docker network create greenlc-net
+
+
+2. Connect existing Postgres container
+Your database container (postgres_greenlc) was created outside this compose file, so you must connect it to the same network:
+bash
+docker network connect greenlc-net postgres_greenlc
+
+⚠️ This needs to be done only once, unless you remove/recreate the container or network.
+
+3. Start the services
+Now bring up the WebSocket service and RabbitMQ using Compose:
+bash
+docker compose up -d
+
+This will start:
+websocket-service (Spring Boot service)
+
+
+rabbitmq-service (RabbitMQ with management console)
+
+
+
+
+4. Access the services
+WebSocket service: http://localhost:8090
+
+
+RabbitMQ Management Console: http://localhost:15672
+
+
+Username: greenlc
+
+
+Password: greenlc
+
+
+
+5. Verify connections
+Check if all containers are running:
+
+bash
+docker ps
+
+Check if they share the same network:
+
+bash
+docker network inspect greenlc-net
+You should see postgres_greenlc, websocket-service, and rabbitmq-service all listed under Containers.
+
+
