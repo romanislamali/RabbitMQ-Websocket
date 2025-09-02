@@ -32,4 +32,11 @@ public class NotificationController {
         Map<String, Object> response = Map.of("message", message);
         return ResponseEntity.ok(response);
     }
+
+    @PatchMapping(Paths.COMMENT+Paths.MARK_AS_READ)
+    public ResponseEntity<Map<String, Object>> markCommentsAsRead(@RequestBody List<UUID> ids) {
+        String message = notificationService.markCommentsAsRead(ids);
+        Map<String, Object> response = Map.of("message", message);
+        return ResponseEntity.ok(response);
+    }
 }

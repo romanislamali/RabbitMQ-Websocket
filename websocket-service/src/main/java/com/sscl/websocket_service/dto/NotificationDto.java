@@ -23,5 +23,6 @@ public class NotificationDto implements Serializable {
     private String updatedAt;
     private String isDeleted;
     private Boolean isRead;
+    private LcCommentsDTO lcComment;
 }
 

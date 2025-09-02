@@ -1,6 +1,7 @@
 package com.sscl.websocket_service.controller;
 
 import com.sscl.websocket_service.config.Paths;
+import com.sscl.websocket_service.entity.LcCommentForNotification;
 import com.sscl.websocket_service.entity.Notification;
 import com.sscl.websocket_service.service.NotificationService;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -30,5 +31,11 @@ public class NotificationFetchController {
     @SendToUser(Paths.QUEUE_ALL_NOTIFICATIONS)
     public List<Notification> fetchAllNotificationsBank(@DestinationVariable String viewerRole) {
         return notificationService.getAllRoleBasedNotificationsForBank(viewerRole);
+    }
+
+    @MessageMapping(Paths.FETCH_ALL_COMMENTS + Paths.LC_ID)
+    @SendToUser(Paths.QUEUE_ALL_COMMENTS)
+    public List<LcCommentForNotification> fetchAllCommentsByLcId(@DestinationVariable UUID lcId) {
+        return notificationService.getAllCommentsByLcId(lcId);
     }
 }

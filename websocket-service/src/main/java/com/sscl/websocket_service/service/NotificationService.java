@@ -1,6 +1,7 @@
 package com.sscl.websocket_service.service;
 
 import com.sscl.websocket_service.dto.NotificationDto;
+import com.sscl.websocket_service.entity.LcCommentForNotification;
 import com.sscl.websocket_service.entity.Notification;
 
 import java.util.List;
@@ -12,4 +13,7 @@ public interface NotificationService {
     List<Notification> getAllRoleBasedNotificationsForBank(String viewerRole);
     String deleteNotification(List<UUID> ids);
     String markNotificationsAsRead(List<UUID> ids);
+
+    List<LcCommentForNotification> getAllCommentsByLcId(UUID lcId);
+    String markCommentsAsRead(List<UUID> ids);
 }
